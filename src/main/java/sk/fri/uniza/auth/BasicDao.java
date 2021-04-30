@@ -13,5 +13,5 @@ public interface BasicDao<T,I> {
 
     void update(T t);
 
-    void delete(T t);
+    void delete(I id);
 }

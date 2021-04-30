@@ -41,7 +41,7 @@ public class Users implements BasicDao<User, String> {
     }
 
     @Override
-    public void delete(User user) {
-        usersDB.put(user.getUserName(), user);
+    public void delete(String name) {
+        usersDB.remove(name);
     }
 }

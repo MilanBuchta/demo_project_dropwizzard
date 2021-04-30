@@ -10,8 +10,11 @@ import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import sk.fri.uniza.auth.ExampleAuthenticator;
 import sk.fri.uniza.auth.ExampleAuthorizer;
 import sk.fri.uniza.auth.User;
+import sk.fri.uniza.auth.Users;
 import sk.fri.uniza.health.TemplateHealthCheck;
+import sk.fri.uniza.resources.AdminUserResource;
 import sk.fri.uniza.resources.HelloWorldResource;
+import sk.fri.uniza.resources.RegisterResource;
 
 public class DemoProjectApplication extends Application<DemoProjectConfiguration> {
 
@@ -36,8 +39,13 @@ public class DemoProjectApplication extends Application<DemoProjectConfiguration
                 configuration.getTemplate(),
                 configuration.getDefaultName()
         );
+        Users users = new Users();
+        final AdminUserResource  adminResource = new AdminUserResource(users);
+
         final TemplateHealthCheck healthCheck =
                 new TemplateHealthCheck(configuration.getTemplate());
+
+        final RegisterResource registerResource = new RegisterResource(users);
 
         environment.jersey().register(new AuthDynamicFeature(
                 new BasicCredentialAuthFilter.Builder<User>()
@@ -52,6 +60,8 @@ public class DemoProjectApplication extends Application<DemoProjectConfiguration
 
         environment.healthChecks().register("template", healthCheck);
         environment.jersey().register(resource);
+        environment.jersey().register(adminResource);
+        environment.jersey().register(registerResource);
     }
 
 }
